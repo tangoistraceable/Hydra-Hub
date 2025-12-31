@@ -1,12 +1,6 @@
 --[[
 
-	Rayfield Interface Suite
-	by Sirius
-
-	shlex  | Designing + Programming
-	iRay   | Programming
-	Max    | Programming
-	Damian | Programming
+	Forked version of the Rayfield Interface Suite developed by Sirius
 
 ]]
 
