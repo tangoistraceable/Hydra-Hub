@@ -1,5 +1,6 @@
 --[[
 
+	Hydra Hub Interface Module
 	Forked version of the Rayfield Interface Suite developed by Sirius
 
 ]]
@@ -420,6 +421,7 @@ local function ChangeTheme(Theme)
 
 	Rayfield.Main.BackgroundColor3 = SelectedTheme.Background
 	Rayfield.Main.Topbar.BackgroundColor3 = SelectedTheme.Topbar
+	Rayfield.Main.TabFrame.BackgroundColor3 = SelectedTheme.Topbar
 	Rayfield.Main.Topbar.CornerRepair.BackgroundColor3 = SelectedTheme.Topbar
 	Rayfield.Main.Shadow.Image.ImageColor3 = SelectedTheme.Shadow
 
@@ -1663,6 +1665,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 		TabButton.BackgroundTransparency = 1
 		TabButton.CornerRepair.BackgroundTransparency = 1
 		TabButton.Title.TextTransparency = 1
+		TabButton.Title.TextColor3 = SelectedTheme.TabTextColor
 		TabButton.Image.ImageTransparency = 1
 
 		TabButton.Visible = not Ext or false
@@ -1695,7 +1698,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			TabButton.BackgroundColor3 = SelectedTheme.Background
 			TabButton.CornerRepair.BackgroundColor3 = SelectedTheme.Background
 			TabButton.Image.ImageColor3 = SelectedTheme.TabTextColor
-			TabButton.Title.TextColor3 = SelectedTheme.TabTextColor
 		end
 
 
@@ -1704,10 +1706,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 		if FirstTab or Ext then
 			TabButton.BackgroundColor3 = SelectedTheme.Topbar
 			TabButton.Image.ImageColor3 = SelectedTheme.TabTextColor
-			TabButton.Title.TextColor3 = SelectedTheme.TabTextColor
 			TweenService:Create(TabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 			TweenService:Create(TabButton.CornerRepair, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1, Size = UDim2.new(0, 42, 1, 0)}):Play()
-			TweenService:Create(TabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
+			TweenService:Create(TabButton.Title, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 			TweenService:Create(TabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 		elseif not Ext then
 			FirstTab = Name
@@ -1734,11 +1735,10 @@ function RayfieldLibrary:CreateWindow(Settings)
 			for _, OtherTabButton in ipairs(TabList:GetChildren()) do
 				if OtherTabButton.Name ~= "Template" and OtherTabButton.ClassName == "Frame" and OtherTabButton ~= TabButton and OtherTabButton.Name ~= "Placeholder" then
 					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.Topbar, Size = UDim2.new(0, 42, 1, 0)}):Play()
-					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageColor3 = SelectedTheme.TabTextColor}):Play()
 					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 					TweenService:Create(OtherTabButton.CornerRepair, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
+					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 				end
 			end
@@ -3141,7 +3141,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			else
 				TabButton.BackgroundColor3 = SelectedTheme.Topbar
 				TabButton.Image.ImageColor3 = SelectedTheme.TabTextColor
-				TabButton.Title.TextColor3 = SelectedTheme.TabTextColor
 			end
 		end)
 
@@ -3312,11 +3311,10 @@ if Topbar:FindFirstChild('Settings') then
 			for _, OtherTabButton in ipairs(TabList:GetChildren()) do
 				if OtherTabButton.Name ~= "Template" and OtherTabButton.ClassName == "Frame" and OtherTabButton ~= TabButton and OtherTabButton.Name ~= "Placeholder" then
 					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.Topbar, Size = UDim2.new(0, 42, 1, 0)}):Play()
-					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageColor3 = SelectedTheme.TabTextColor}):Play()
 					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 					TweenService:Create(OtherTabButton.CornerRepair, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
+					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 				end
 			end
