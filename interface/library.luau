@@ -292,11 +292,11 @@ local Library = {
 			ToggleEnabledOuterStroke = Color3.fromRGB(18, 16, 15),
 			ToggleDisabledOuterStroke = Color3.fromRGB(18, 16, 15),
 
-			DropdownSelected = Color3.fromRGB(110, 50, 210),
-			DropdownUnselected = Color3.fromRGB(25, 23, 22),
+			DropdownItemSelected = Color3.fromRGB(110, 50, 210),
+			DropdownItemUnselected = Color3.fromRGB(25, 23, 22),
 
 			InputBackground = Color3.fromRGB(36, 10, 60),
-			InputStroke = Color3.fromRGB(18, 16, 15),
+			
 			PlaceholderColor = Color3.fromRGB(237, 222, 231),
 		}
 	}
@@ -703,7 +703,6 @@ function Library:Notify(data) -- action e.g open messages
 		newNotification.Title.TextColor3 = SelectedTheme.TextColor
 		newNotification.Description.TextColor3 = SelectedTheme.TextColor
 		newNotification.BackgroundColor3 = SelectedTheme.Background
-		newNotification.UIStroke.Color = SelectedTheme.TextColor
 		newNotification.Icon.ImageColor3 = SelectedTheme.TextColor
 
 		newNotification.BackgroundTransparency = 1
@@ -734,7 +733,7 @@ function Library:Notify(data) -- action e.g open messages
 		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, math.max(bounds[1] + bounds[2] + 31, 60))}):Play()
 
 		task.wait(0.15)
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
 		task.wait(0.05)
@@ -743,7 +742,7 @@ function Library:Notify(data) -- action e.g open messages
 
 		task.wait(0.05)
 		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35}):Play()
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95}):Play()
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
 		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.82}):Play()
 
 		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
@@ -1238,14 +1237,21 @@ function Library:CreateWindow(Settings)
 	print('creating window')
 	Main.TabFrame.BackgroundTransparency = 1
 	Main.Visible = false
+
+	for _, obj in Interface:GetDescendants() do
+		if obj.ClassName == "TextLabel" or obj.ClassName == "TextBox" or obj.ClassName == "TextButton" then
+			
+		end
+	end
 	
 	if Interface:FindFirstChild('Loading') then
 		if useStudio or getgenv and not getgenv().interfaceCached then
 			Interface.Enabled = true
 			Interface.Loading.Visible = true
 			Interface.Loading.Background.BackgroundTransparency = 1
+			Interface.Loading.Background.UIStroke.Transparency = 1
 			TweenService:Create(Interface.Loading.Background,  TweenInfo.new(1, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-
+			TweenService:Create(Interface.Loading.Background.UIStroke,  TweenInfo.new(1, Enum.EasingStyle.Exponential), {Transparency = 0.52}):Play()
 			task.wait(2)
 			Interface.Loading.Visible = false
 			Main.Visible = true
@@ -1287,6 +1293,7 @@ function Library:CreateWindow(Settings)
 	end
 	local Passthrough = false
 	Topbar.Title.Text = Settings.Name
+	Topbar.Version.Text = Settings.Version
 
 	Main.Size = UDim2.new(0, 420, 0, 100)
 	Main.Visible = true
@@ -1350,20 +1357,6 @@ function Library:CreateWindow(Settings)
 	Topbar.Visible = false
 	Elements.Visible = false
 	LoadingFrame.Visible = true
-
-	if not Settings.DisablePrompts then
-		task.spawn(function()
-			while true do
-				task.wait(math.random(180, 600))
-				Library:Notify({
-					Title = "Interface Interface",
-					Content = "Enjoying this UI library? Find it at sirius.menu/discord",
-					Duration = 7,
-					Image = 4370033185,
-				})
-			end
-		end)
-	end
 
 	pcall(function()
 		if not Settings.ConfigurationSaving.FileName then
@@ -2192,7 +2185,7 @@ function Library:CreateWindow(Settings)
 			Label.UIStroke.Transparency = 1
 			Label.Title.TextTransparency = 1
 
-			TweenService:Create(Label, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = Color and 0.8 or 0}):Play()
+			TweenService:Create(Label, TweenInfo.new(0.0, Enum.EasingStyle.Exponential), {BackgroundTransparency = Color and 0.8 or 0}):Play()
 			TweenService:Create(Label.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = Color and 0.7 or 0}):Play()
 			TweenService:Create(Label.Icon, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 			TweenService:Create(Label.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = Color and 0.2 or 0}):Play()	
@@ -2286,7 +2279,6 @@ function Library:CreateWindow(Settings)
 			Input.InputFrame.InputBox.Text = InputSettings.CurrentValue or ''
 
 			Input.InputFrame.BackgroundColor3 = SelectedTheme.InputBackground
-			Input.InputFrame.UIStroke.Color = SelectedTheme.InputStroke
 
 			TweenService:Create(Input, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 			TweenService:Create(Input.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
@@ -2360,7 +2352,6 @@ function Library:CreateWindow(Settings)
 
 			Interface.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
 				Input.InputFrame.BackgroundColor3 = SelectedTheme.InputBackground
-				Input.InputFrame.UIStroke.Color = SelectedTheme.InputStroke
 			end)
 
 			return InputSettings
@@ -2375,6 +2366,8 @@ function Library:CreateWindow(Settings)
 				Dropdown.Name = DropdownSettings.Name
 			end
 			Dropdown.Title.Text = DropdownSettings.Name
+			Dropdown.Selected.TextColor3 = SelectedTheme.DropdownSecondaryColor
+			Dropdown.Toggle.ImageColor3 = SelectedTheme.DropdownSecondaryColor
 			Dropdown.Visible = true
 			Dropdown.Parent = TabPage
 
@@ -2407,7 +2400,6 @@ function Library:CreateWindow(Settings)
 				Dropdown.Selected.Text = DropdownSettings.CurrentOption[1] or "None"
 			end
 
-			Dropdown.Toggle.ImageColor3 = SelectedTheme.TextColor
 			TweenService:Create(Dropdown, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownBackgroundColor}):Play()
 
 			Dropdown.BackgroundTransparency = 1
@@ -2424,7 +2416,7 @@ function Library:CreateWindow(Settings)
 				end
 			end
 
-			Dropdown.Toggle.Rotation = 180
+			Dropdown.Toggle.Rotation = 0
 
 			Dropdown.Interact.MouseButton1Click:Connect(function()
 				TweenService:Create(Dropdown, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownBackgroundHoverColor}):Play()
@@ -2436,13 +2428,16 @@ function Library:CreateWindow(Settings)
 					TweenService:Create(Dropdown, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -10, 0, 45)}):Play()
 					for _, DropdownOpt in Dropdown.List:GetChildren() do
 						if DropdownOpt.ClassName == "Frame" and DropdownOpt.Name ~= "Placeholder" then
-							TweenService:Create(DropdownOpt, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-							TweenService:Create(DropdownOpt.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-							TweenService:Create(DropdownOpt.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+							DropdownOpt.BackgroundTransparency = 1
+							DropdownOpt.Box.Checkmark.ImageTransparency = 1
+							DropdownOpt.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemBackground
+							DropdownOpt.Title.TextTransparency = 1
 						end
 					end
 					TweenService:Create(Dropdown.List, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ScrollBarImageTransparency = 1}):Play()
-					TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Rotation = 180}):Play()	
+					TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Rotation = 0}):Play()	
+					TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {ImageTransparency = 0.4}):Play()	
+					TweenService:Create(Dropdown.Selected, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 0.4}):Play()	
 					task.wait(0.35)
 					Dropdown.List.Visible = false
 					Debounce = false
@@ -2451,14 +2446,20 @@ function Library:CreateWindow(Settings)
 					TweenService:Create(Dropdown, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -10, 0, 180)}):Play()
 					Dropdown.List.Visible = true
 					TweenService:Create(Dropdown.List, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ScrollBarImageTransparency = 0.7}):Play()
-					TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Rotation = 0}):Play()	
+					TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Rotation = 180}):Play()	
+					TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()	
+					TweenService:Create(Dropdown.Selected, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()	
 					for _, DropdownOpt in Dropdown.List:GetChildren() do
 						if DropdownOpt.ClassName == "Frame" and DropdownOpt.Name ~= "Placeholder" then
-							if DropdownOpt.Name ~= Dropdown.Selected.Text then
-								TweenService:Create(DropdownOpt.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-							end
 							TweenService:Create(DropdownOpt, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 							TweenService:Create(DropdownOpt.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+							if table.find(DropdownSettings.CurrentOption, DropdownOpt.Title.Text) then
+								TweenService:Create(DropdownOpt.Box.Checkmark, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = .2}):Play()
+								TweenService:Create(DropdownOpt.Box.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownItemSelected}):Play()
+							else
+								TweenService:Create(DropdownOpt.Box.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownItemUnselected}):Play()
+								TweenService:Create(DropdownOpt.Box.Checkmark, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
+							end
 						end
 					end
 				end
@@ -2487,6 +2488,10 @@ function Library:CreateWindow(Settings)
 					DropdownOption.BackgroundTransparency = 1
 					DropdownOption.UIStroke.Transparency = 1
 					DropdownOption.Title.TextTransparency = 1
+					DropdownOption.Box.Checkmark.ImageTransparency = 1
+					DropdownOption.Box.Checkmark.ImageColor3 = SelectedTheme.DropdownItemBackground
+					DropdownOption.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemUnselected
+					DropdownOption.BackgroundColor3 = SelectedTheme.DropdownItemBackground
 
 					--local Dropdown = Tab:CreateDropdown({
 					--	Name = "Dropdown Example",
@@ -2535,8 +2540,8 @@ function Library:CreateWindow(Settings)
 							else
 								Dropdown.Selected.Text = DropdownSettings.CurrentOption[1]
 							end
-							TweenService:Create(DropdownOption.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-							TweenService:Create(DropdownOption, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownSelected}):Play()
+							TweenService:Create(DropdownOption.Box.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownItemSelected}):Play()
+							TweenService:Create(DropdownOption.Box.Checkmark, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 							Debounce = true
 						end
 
@@ -2557,7 +2562,8 @@ function Library:CreateWindow(Settings)
 
 						for _, droption in Dropdown.List:GetChildren() do
 							if droption.ClassName == "Frame" and droption.Name ~= "Placeholder" and not table.find(DropdownSettings.CurrentOption, droption.Name) then
-								TweenService:Create(droption, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownUnselected}):Play()
+								TweenService:Create(droption.Box.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownItemUnselected}):Play()
+								TweenService:Create(droption.Box.Checkmark, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
 							end
 						end
 						if not DropdownSettings.MultipleOptions then
@@ -2565,13 +2571,13 @@ function Library:CreateWindow(Settings)
 							TweenService:Create(Dropdown, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -10, 0, 45)}):Play()
 							for _, DropdownOpt in Dropdown.List:GetChildren() do
 								if DropdownOpt.ClassName == "Frame" and DropdownOpt.Name ~= "Placeholder" then
-									TweenService:Create(DropdownOpt, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-									TweenService:Create(DropdownOpt.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+									TweenService:Create(DropdownOpt.Box.Indicator, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.DropdownItemUnselected}):Play()
+									TweenService:Create(DropdownOption.Box.Checkmark, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
 									TweenService:Create(DropdownOpt.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 								end
 							end
 							TweenService:Create(Dropdown.List, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ScrollBarImageTransparency = 1}):Play()
-							TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Rotation = 180}):Play()	
+							TweenService:Create(Dropdown.Toggle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Rotation = 0}):Play()	
 							task.wait(0.35)
 							Dropdown.List.Visible = false
 						end
@@ -2580,10 +2586,6 @@ function Library:CreateWindow(Settings)
 							SaveConfiguration()
 						end
 					end)
-
-					Interface.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
-						DropdownOption.UIStroke.Color = SelectedTheme.ElementStroke
-					end)
 				end
 			end
 			SetDropdownOptions()
@@ -2591,16 +2593,20 @@ function Library:CreateWindow(Settings)
 			for _, droption in Dropdown.List:GetChildren() do
 				if droption.ClassName == "Frame" and droption.Name ~= "Placeholder" then
 					if not table.find(DropdownSettings.CurrentOption, droption.Name) then
-						droption.BackgroundColor3 = SelectedTheme.DropdownUnselected
+						droption.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemUnselected
+						droption.Box.Checkmark.ImageTransparency = 1
 					else
-						droption.BackgroundColor3 = SelectedTheme.DropdownSelected
+						droption.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemSelected
+						droption.Box.Checkmark.ImageTransparency = 0.2
 					end
 
 					Interface.Main:GetPropertyChangedSignal('BackgroundColor3'):Connect(function()
 						if not table.find(DropdownSettings.CurrentOption, droption.Name) then
-							droption.BackgroundColor3 = SelectedTheme.DropdownUnselected
+							droption.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemUnselected
+							droption.Box.Checkmark.ImageTransparency = 1
 						else
-							droption.BackgroundColor3 = SelectedTheme.DropdownSelected
+							droption.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemSelected
+							droption.Box.Checkmark.ImageTransparency = 0.2
 						end
 					end)
 				end
@@ -2646,9 +2652,11 @@ function Library:CreateWindow(Settings)
 				for _, droption in Dropdown.List:GetChildren() do
 					if droption.ClassName == "Frame" and droption.Name ~= "Placeholder" then
 						if not table.find(DropdownSettings.CurrentOption, droption.Name) then
-							droption.BackgroundColor3 = SelectedTheme.DropdownUnselected
+							droption.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemUnselected
+							droption.Box.Checkmark.ImageTransparency = 1
 						else
-							droption.BackgroundColor3 = SelectedTheme.DropdownSelected
+							droption.Box.Indicator.BackgroundColor3 = SelectedTheme.DropdownItemSelected
+							droption.Box.Checkmark.ImageTransparency = 0.2
 						end
 					end
 				end
